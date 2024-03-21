@@ -1,5 +1,6 @@
 package com.namig.tahmazli.deezerandroidclient.genres.view;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
@@ -29,6 +31,7 @@ import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewHolder> {
@@ -137,16 +140,28 @@ class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewH
         }
 
         private void useDownloadedBitmap(final Bitmap bitmap) {
-            genreImage.setImageBitmap(bitmap);
+            Log.d(TAG, "useDownloadedBitmap: Thread " + Thread.currentThread().getName());
 
             final int dominantColor =
                     Palette.from(bitmap).generate()
                             .getMutedColor(Color.BLACK);
 
-            Log.d(TAG, "dominant color " + dominantColor);
+            Log.d(TAG, "useDownloadedBitmap: dominant color " + dominantColor);
 
-            mask.setBackgroundColor(dominantColor);
-            mask.setAlpha(0.5f);
+            getMainExecutor().execute(() -> {
+                genreImage.setImageBitmap(bitmap);
+                mask.setBackgroundColor(dominantColor);
+                mask.setAlpha(0.5f);
+            });
+        }
+
+        @NonNull
+        private Executor getMainExecutor() {
+            return ContextCompat.getMainExecutor(getContext());
+        }
+
+        private Context getContext() {
+            return itemView.getContext();
         }
     }
 }
