@@ -39,7 +39,7 @@ public class GenresFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final GenresViewImpl view = new GenresViewImpl(inflater, container);
+        final GenresViewImpl view = new GenresViewImpl(inflater, container, mViewModel);
         mViewModel.getPresenter().attachView(view);
         return view.getRoot();
     }

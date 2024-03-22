@@ -31,12 +31,13 @@ import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewHolder> {
 
-    static GenresListAdapter newInstance() {
+    static GenresListAdapter newInstance(final ItemClickListener listener) {
         final DiffUtil.ItemCallback<Genre> itemCallback = new DiffUtil.ItemCallback<>() {
             @Override
             public boolean areItemsTheSame(@NonNull Genre oldItem, @NonNull Genre newItem) {
@@ -53,11 +54,15 @@ class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewH
                 .setBackgroundThreadExecutor(Executors.newSingleThreadExecutor())
                 .build();
 
-        return new GenresListAdapter(differConfig);
+        return new GenresListAdapter(differConfig, listener);
     }
 
-    private GenresListAdapter(final AsyncDifferConfig<Genre> config) {
+    private final ItemClickListener mItemClickListener;
+
+    private GenresListAdapter(final AsyncDifferConfig<Genre> config,
+                              final ItemClickListener listener) {
         super(config);
+        this.mItemClickListener = listener;
     }
 
     @NonNull
@@ -67,7 +72,8 @@ class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewH
                 LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_genre_list_item,
                                 parent,
-                                false));
+                                false),
+                mItemClickListener);
     }
 
     @Override
@@ -83,15 +89,23 @@ class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewH
         public static final String TAG = GenresViewHolder.class.getSimpleName();
         private final Map<String, Bitmap> mDownloadedResource = new HashMap<>();
 
-        public GenresViewHolder(@NonNull View itemView) {
+        private final View.OnClickListener mClickListener;
+
+        @Nullable private Genre mGenre;
+
+        public GenresViewHolder(@NonNull View itemView,
+                                final ItemClickListener listener) {
             super(itemView);
             genreImage = itemView.findViewById(R.id.genre_image);
             genreTitle = itemView.findViewById(R.id.genre_title);
             mask = itemView.findViewById(R.id.mask);
+
+            mClickListener = (v) -> listener.onGenreClicked(Objects.requireNonNull(mGenre));
         }
 
         void bind(final Genre genre) {
 
+            mGenre = genre;
             if (mDownloadedResource.containsKey(genre.image())) {
                 final Bitmap bitmap = mDownloadedResource.get(genre.image());
                 useDownloadedBitmap(bitmap);
@@ -104,6 +118,8 @@ class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewH
             }
 
             genreTitle.setText(genre.name());
+
+            itemView.setOnClickListener(mClickListener);
         }
 
         @Override
@@ -163,5 +179,9 @@ class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewH
         private Context getContext() {
             return itemView.getContext();
         }
+    }
+
+    public interface ItemClickListener {
+        void onGenreClicked(final Genre genre);
     }
 }

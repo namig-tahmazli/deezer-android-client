@@ -2,7 +2,6 @@ package com.namig.tahmazli.deezerandroidclient.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,15 +12,16 @@ import com.namig.tahmazli.deezerandroidclient.R;
 import com.namig.tahmazli.deezerandroidclient.di.android.AndroidInjection;
 import com.namig.tahmazli.deezerandroidclient.di.android.AndroidInjector;
 import com.namig.tahmazli.deezerandroidclient.di.android.HasFragmentInjector;
-import com.namig.tahmazli.deezerandroidclient.genres.GenresFragment;
-import com.namig.tahmazli.deezerandroidclient.navigation.NavigationManager;
 
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements HasFragmentInjector {
 
     @Inject
-    NavigationManager navigationManager;
+    Navigator navigator;
+
+    @Inject
+    NavigationManager mNavigationManager;
 
     @Inject
     AndroidInjector<Fragment> fragmentInjector;
@@ -30,18 +30,24 @@ public class MainActivity extends AppCompatActivity implements HasFragmentInject
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidInjection.inject(this);
+        mNavigationManager.attachFragmentManager(getSupportFragmentManager());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            navigationManager.navigateTo(new GenresFragment(), null);
+            navigator.navigateToGenres();
         }
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mNavigationManager.detachFragmentManager();
+        super.onDestroy();
     }
 
     @Override

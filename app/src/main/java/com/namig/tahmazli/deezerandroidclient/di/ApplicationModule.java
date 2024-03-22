@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat;
 
 import com.namig.tahmazli.deezerandroidclient.App;
 import com.namig.tahmazli.deezerandroidclient.BackgroundThreadExecutor;
+import com.namig.tahmazli.deezerandroidclient.main.NavigationModule;
 import com.namig.tahmazli.deezerandroidclient.remotestore.NetworkingModule;
 
 import java.util.concurrent.Executor;
@@ -12,7 +13,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(includes = {NetworkingModule.class})
+@Module(includes = {NetworkingModule.class, NavigationModule.class})
 public abstract class ApplicationModule {
 
     @Provides

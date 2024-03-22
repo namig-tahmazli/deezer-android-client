@@ -14,4 +14,8 @@ public interface GenresView {
     void hideError();
     void displayGenres(final List<Genre> genres);
     void hideGenres();
+
+    interface Listener {
+        void onGenreClicked(final Genre genre);
+    }
 }

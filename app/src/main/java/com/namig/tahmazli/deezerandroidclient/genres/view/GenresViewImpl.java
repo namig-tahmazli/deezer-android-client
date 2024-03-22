@@ -21,14 +21,15 @@ public class GenresViewImpl extends BaseView implements GenresView {
     private final ProgressBar progressBar;
 
     public GenresViewImpl(final LayoutInflater inflater,
-                          @Nullable final ViewGroup parent) {
+                          @Nullable final ViewGroup parent,
+                          final GenresView.Listener listener) {
         super(inflater, parent, R.layout.fragment_genres);
 
         final RecyclerView genresList = findViewById(R.id.genres_list);
         final GridLayoutManager layoutManager = new GridLayoutManager(
                 getContext(), 2, GridLayoutManager.VERTICAL, false);
         genresList.setLayoutManager(layoutManager);
-        mAdapter = GenresListAdapter.newInstance();
+        mAdapter = GenresListAdapter.newInstance(listener::onGenreClicked);
         genresList.setAdapter(mAdapter);
 
         progressBar = findViewById(R.id.progress_bar);

@@ -1,4 +1,4 @@
-package com.namig.tahmazli.deezerandroidclient.navigation;
+package com.namig.tahmazli.deezerandroidclient.main;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,23 +9,34 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.namig.tahmazli.deezerandroidclient.R;
+import com.namig.tahmazli.deezerandroidclient.di.AppScope;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
-public class NavigationManager {
+@AppScope
+class NavigationManager {
 
-    private final FragmentManager mFragmentManager;
+    @Nullable private FragmentManager mFragmentManager;
 
     private static final String TAG = NavigationManager.class.getSimpleName();
 
     @Inject
-    public NavigationManager(final FragmentManager fragmentManager) {
-        this.mFragmentManager = fragmentManager;
+    NavigationManager() {
+    }
+
+    void attachFragmentManager(final FragmentManager fragmentManager) {
+        mFragmentManager = fragmentManager;
+    }
+
+    void detachFragmentManager() {
+        mFragmentManager = null;
     }
 
     public void navigateTo(final Fragment fragment,
                            @Nullable final Bundle args) {
-
+        Objects.requireNonNull(mFragmentManager);
 
         final Class<? extends Fragment> type = fragment.getClass();
         final String tag = type.getName();
