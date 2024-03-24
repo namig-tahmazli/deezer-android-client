@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 
-public abstract class BaseView {
+public abstract class BaseView implements MvpView {
     private final View mView;
 
     protected BaseView(final LayoutInflater inflater,
@@ -17,7 +17,8 @@ public abstract class BaseView {
         mView = inflater.inflate(layoutId, parent, false);
     }
 
-    public View getRoot() {
+    @Override
+    public final View getRoot() {
         return mView;
     }
 
