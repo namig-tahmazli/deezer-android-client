@@ -12,37 +12,46 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.namig.tahmazli.deezerandroidclient.R;
 import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
 import com.namig.tahmazli.deezerandroidclient.utils.BaseView;
+import com.namig.tahmazli.deezerandroidclient.utils.SharedElementTransition;
+import com.namig.tahmazli.deezerandroidclient.utils.ViewUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 public class GenresViewImpl extends BaseView implements GenresView {
 
     private final GenresListAdapter mAdapter;
-    private final ProgressBar progressBar;
+    private final ProgressBar mProgressBar;
+    private final RecyclerView mGenresList;
+    private final SharedElementTransition mSharedElementTransition;
 
     public GenresViewImpl(final LayoutInflater inflater,
                           @Nullable final ViewGroup parent,
-                          final GenresView.Listener listener) {
+                          final GenresView.Listener listener,
+                          final SharedElementTransition sharedElementTransition) {
         super(inflater, parent, R.layout.fragment_genres);
+        mSharedElementTransition = sharedElementTransition;
 
-        final RecyclerView genresList = findViewById(R.id.genres_list);
+        mGenresList = findViewById(R.id.genres_list);
         final GridLayoutManager layoutManager = new GridLayoutManager(
                 getContext(), 2, GridLayoutManager.VERTICAL, false);
-        genresList.setLayoutManager(layoutManager);
+        mGenresList.setLayoutManager(layoutManager);
         mAdapter = GenresListAdapter.newInstance(listener::onGenreClicked);
-        genresList.setAdapter(mAdapter);
+        mGenresList.setAdapter(mAdapter);
 
-        progressBar = findViewById(R.id.progress_bar);
+        mProgressBar = findViewById(R.id.progress_bar);
     }
 
     @Override
     public void showLoader() {
-        progressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoader() {
-        progressBar.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -68,5 +77,36 @@ public class GenresViewImpl extends BaseView implements GenresView {
     @Override
     public void hideGenres() {
 
+    }
+
+    @Override
+    public void startSharedElementTransition(Genre genre) {
+        final List<Genre> genreList = mAdapter.getCurrentList();
+        final OptionalInt index = IntStream.range(0, genreList.size())
+                .filter(i -> genreList.get(i).id() == genre.id())
+                .findFirst();
+
+        if (index.isPresent()) {
+            final var viewHolder = mGenresList.findViewHolderForAdapterPosition(
+                    index.getAsInt());
+            Objects.requireNonNull(viewHolder,
+                    String.format("Could not find view for %s", genre));
+            mSharedElementTransition.enqueue(viewHolder.itemView, "genre_image");
+        }
+    }
+
+    @Override
+    public void startSharedElementReturnTransition(Genre genre) {
+        List<Genre> genreList = mAdapter.getCurrentList();
+        final int position = IntStream.range(0, genreList.size())
+                .filter(i -> genreList.get(i).id() == genre.id())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("Could not find genre %s in the list",
+                                genre)
+                ));
+
+        ViewUtils.getNotifiedWhenViewIsAttached(mGenresList, position,
+                v -> mSharedElementTransition.transition(v, "genre_image"));
     }
 }

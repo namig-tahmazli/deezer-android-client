@@ -17,6 +17,7 @@ class GenresState implements Parcelable {
     @Nullable
     String errorContent;
     boolean showLoading;
+    Genre transitioningGenre;
 
     List<Genre> loadedGenres = new ArrayList<>();
 
@@ -24,6 +25,7 @@ class GenresState implements Parcelable {
         showError = in.readByte() != 0;
         errorContent = in.readString();
         showLoading = in.readByte() != 0;
+        transitioningGenre = in.readParcelable(Genre.class.getClassLoader());
     }
 
     GenresState() {
@@ -32,7 +34,7 @@ class GenresState implements Parcelable {
         showLoading = false;
     }
 
-    public static final Creator<GenresState> CREATOR = new Creator<GenresState>() {
+    public static final Creator<GenresState> CREATOR = new Creator<>() {
         @Override
         public GenresState createFromParcel(Parcel in) {
             return new GenresState(in);
@@ -54,5 +56,7 @@ class GenresState implements Parcelable {
         dest.writeByte((byte) (showError ? 1 : 0));
         dest.writeString(errorContent);
         dest.writeByte((byte) (showLoading ? 1 : 0));
+        if (transitioningGenre != null)
+            dest.writeParcelable(transitioningGenre, flags);
     }
 }

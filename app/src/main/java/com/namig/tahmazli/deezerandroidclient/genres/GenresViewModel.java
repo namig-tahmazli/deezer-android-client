@@ -45,6 +45,7 @@ public class GenresViewModel
     @Override
     public void onGenreClicked(Genre genre) {
         mNavigator.navigateToArtists(genre);
+        mPresenter.startSharedElementTransition(genre);
     }
 
     @AssistedFactory

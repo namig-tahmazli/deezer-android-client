@@ -39,6 +39,9 @@ public class GenresPresenter
         }
 
         genresView.displayGenres(mState.loadedGenres);
+
+        if (mState.transitioningGenre != null)
+            genresView.startSharedElementReturnTransition(mState.transitioningGenre);
     }
 
     @Override
@@ -77,5 +80,10 @@ public class GenresPresenter
             v.showError();
             v.setErrorText(null);
         });
+    }
+
+    public void startSharedElementTransition(final Genre genre) {
+        mState.transitioningGenre = genre;
+        updateView(v -> v.startSharedElementTransition(genre));
     }
 }

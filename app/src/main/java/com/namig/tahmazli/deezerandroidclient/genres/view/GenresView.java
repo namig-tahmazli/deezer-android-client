@@ -22,6 +22,10 @@ public interface GenresView extends MvpView {
 
     void hideGenres();
 
+    void startSharedElementTransition(final Genre genre);
+
+    void startSharedElementReturnTransition(final Genre genre);
+
     interface Listener {
         void onGenreClicked(final Genre genre);
     }

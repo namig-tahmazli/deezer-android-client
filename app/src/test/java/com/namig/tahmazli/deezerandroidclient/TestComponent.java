@@ -1,5 +1,6 @@
 package com.namig.tahmazli.deezerandroidclient;
 
+import com.namig.tahmazli.deezerandroidclient.artists.TestDisplayingGenreInfo;
 import com.namig.tahmazli.deezerandroidclient.genres.TestFetchingGenresAndDisplayingThem;
 
 import dagger.Component;
@@ -13,4 +14,5 @@ public interface TestComponent {
     }
 
     void inject(final TestFetchingGenresAndDisplayingThem test);
+    void inject(final TestDisplayingGenreInfo test);
 }

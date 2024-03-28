@@ -18,7 +18,8 @@ import javax.inject.Inject;
 @AppScope
 class NavigationManager {
 
-    @Nullable private FragmentManager mFragmentManager;
+    @Nullable
+    private FragmentManager mFragmentManager;
 
     private static final String TAG = NavigationManager.class.getSimpleName();
 
@@ -34,8 +35,8 @@ class NavigationManager {
         mFragmentManager = null;
     }
 
-    public void navigateTo(final Fragment fragment,
-                           @Nullable final Bundle args) {
+    void navigateTo(final Fragment fragment,
+                    @Nullable final Bundle args) {
         Objects.requireNonNull(mFragmentManager);
 
         final Class<? extends Fragment> type = fragment.getClass();
@@ -62,5 +63,10 @@ class NavigationManager {
         }
 
         transaction.setReorderingAllowed(true).commit();
+    }
+
+    public void navigateBack() {
+        if (mFragmentManager != null)
+            mFragmentManager.popBackStackImmediate();
     }
 }
