@@ -29,7 +29,7 @@ public class ArtistsViewModel extends BaseViewModel<ArtistsView, ArtistsPresente
     public static final String EXTRA_GENRE = "extra_genre";
 
     void navigateBack() {
-        mPresenter.startTransitioningBack();
+        mPresenter.startSharedElementReturnTransition();
         mNavigator.navigateBack();
     }
 }

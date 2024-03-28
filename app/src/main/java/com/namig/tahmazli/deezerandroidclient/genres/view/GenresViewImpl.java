@@ -80,19 +80,20 @@ public class GenresViewImpl extends BaseView implements GenresView {
     }
 
     @Override
-    public void startSharedElementTransition(Genre genre) {
+    public void enqueueSharedElementTransition(Genre genre) {
         final List<Genre> genreList = mAdapter.getCurrentList();
-        final OptionalInt index = IntStream.range(0, genreList.size())
+        final int index = IntStream.range(0, genreList.size())
                 .filter(i -> genreList.get(i).id() == genre.id())
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("Could not find genre %s in the list",
+                                genre)
+                ));
 
-        if (index.isPresent()) {
-            final var viewHolder = mGenresList.findViewHolderForAdapterPosition(
-                    index.getAsInt());
-            Objects.requireNonNull(viewHolder,
-                    String.format("Could not find view for %s", genre));
-            mSharedElementTransition.enqueue(viewHolder.itemView, "genre_image");
-        }
+        final var viewHolder = mGenresList.findViewHolderForAdapterPosition(index);
+        Objects.requireNonNull(viewHolder,
+                String.format("Could not find view for %s", genre));
+        mSharedElementTransition.enqueue(viewHolder.itemView, "genre_image");
     }
 
     @Override

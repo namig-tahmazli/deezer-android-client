@@ -11,9 +11,11 @@ import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
 class ArtistsState implements Parcelable {
     @Nullable
     Genre genre;
+    boolean isSharedElementTransitionStarted = false;
 
     protected ArtistsState(Parcel in) {
         genre = in.readParcelable(Genre.class.getClassLoader());
+        isSharedElementTransitionStarted = in.readByte() != 0;
     }
 
     ArtistsState() {
@@ -39,5 +41,6 @@ class ArtistsState implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(genre, flags);
+        dest.writeByte((byte) (isSharedElementTransitionStarted ? 1 : 0));
     }
 }

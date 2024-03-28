@@ -15,6 +15,7 @@ import com.namig.tahmazli.deezerandroidclient.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class ArtistsViewImpl extends BaseView implements ArtistsView {
     private final HeaderAdapter mHeaderAdapter;
@@ -46,12 +47,16 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
         final ArrayList<ArtistsListItem.Header> list = new ArrayList<>();
         list.add(new ArtistsListItem.Header(genre));
         mHeaderAdapter.submitList(list);
+    }
+
+    @Override
+    public void startSharedElementTransition(Genre genre) {
         ViewUtils.getNotifiedWhenViewIsAttached(mArtistsList, 0,
                 v -> mSharedElementTransition.transition(v, "genre_image"));
     }
 
     @Override
-    public void startBackTransition() {
+    public void enqueueSharedElementReturnTransition() {
         final var viewHolder = mArtistsList.findViewHolderForLayoutPosition(0);
         Objects.requireNonNull(viewHolder);
         mSharedElementTransition.enqueue(viewHolder.itemView, "genre_image");

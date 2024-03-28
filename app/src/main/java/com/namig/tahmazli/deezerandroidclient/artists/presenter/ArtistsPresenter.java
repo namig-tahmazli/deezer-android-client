@@ -19,7 +19,12 @@ public class ArtistsPresenter extends Presenter<ArtistsView, ArtistsState> {
     @Override
     protected void initViewWithLatestState(ArtistsView artistsView) {
         final Genre genre = mState.genre;
-        if (genre != null) artistsView.displayGenre(genre);
+        if (genre != null) {
+            artistsView.displayGenre(genre);
+            artistsView.startSharedElementTransition(genre);
+
+            mState.isSharedElementTransitionStarted = true;
+        }
     }
 
     public void displayGenreInfo(final Genre genre) {
@@ -27,7 +32,7 @@ public class ArtistsPresenter extends Presenter<ArtistsView, ArtistsState> {
         updateView(v -> v.displayGenre(genre));
     }
 
-    public void startTransitioningBack() {
-        updateView(ArtistsView::startBackTransition);
+    public void startSharedElementReturnTransition() {
+        updateView(ArtistsView::enqueueSharedElementReturnTransition);
     }
 }

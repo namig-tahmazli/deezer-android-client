@@ -2,8 +2,8 @@ package com.namig.tahmazli.deezerandroidclient.genres.presenter;
 
 import androidx.lifecycle.SavedStateHandle;
 
-import com.namig.tahmazli.deezerandroidclient.genres.view.GenresView;
 import com.namig.tahmazli.deezerandroidclient.error.AppError;
+import com.namig.tahmazli.deezerandroidclient.genres.view.GenresView;
 import com.namig.tahmazli.deezerandroidclient.interactors.FetchGenresAndCacheThemUseCase;
 import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
 import com.namig.tahmazli.deezerandroidclient.utils.presenter.Presenter;
@@ -42,6 +42,8 @@ public class GenresPresenter
 
         if (mState.transitioningGenre != null)
             genresView.startSharedElementReturnTransition(mState.transitioningGenre);
+
+        mState.transitioningGenre = null;
     }
 
     @Override
@@ -84,6 +86,6 @@ public class GenresPresenter
 
     public void startSharedElementTransition(final Genre genre) {
         mState.transitioningGenre = genre;
-        updateView(v -> v.startSharedElementTransition(genre));
+        updateView(v -> v.enqueueSharedElementTransition(genre));
     }
 }

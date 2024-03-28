@@ -22,7 +22,7 @@ public interface GenresView extends MvpView {
 
     void hideGenres();
 
-    void startSharedElementTransition(final Genre genre);
+    void enqueueSharedElementTransition(final Genre genre);
 
     void startSharedElementReturnTransition(final Genre genre);
 

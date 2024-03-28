@@ -5,6 +5,6 @@ import com.namig.tahmazli.deezerandroidclient.utils.MvpView;
 
 public interface ArtistsView extends MvpView {
     void displayGenre(final Genre genre);
-
-    void startBackTransition();
+    void startSharedElementTransition(final Genre genre);
+    void enqueueSharedElementReturnTransition();
 }

@@ -102,6 +102,8 @@ public class SharedElementTransition {
 
                 mParent.removeView(transitioningView);
                 mEnqueuedTransitions.remove(transitionName);
+
+                animatorSet.removeListener(this);
             }
         });
         animatorSet.start();
@@ -116,14 +118,37 @@ public class SharedElementTransition {
                 )));
 
         final PointF positionOnWindow = calculateViewPositionOnWindow(view);
-        final var newView = drawTransitioningViewOnWindow(view, positionOnWindow);
-        return new Transition(newView, positionOnWindow);
+        final var snapshotView = drawSnapshotOfTransitioningViewOnWindow(view, positionOnWindow);
+        return new Transition(snapshotView, positionOnWindow);
     }
 
-    private View drawTransitioningViewOnWindow(final View transitioningView,
-                                               final PointF coordinates) {
+    private View drawSnapshotOfTransitioningViewOnWindow(final View transitioningView,
+                                                         final PointF coordinates) {
 
-        final ImageView newView = new ImageView(transitioningView.getContext());
+        final View snapshotView = createSnapshotViewOfTransitioningView(transitioningView);
+        mParent.addView(snapshotView);
+
+        snapshotView.setX(coordinates.x);
+        snapshotView.setY(coordinates.y);
+
+        return snapshotView;
+    }
+
+    private static View createSnapshotViewOfTransitioningView(final View transitioningView) {
+        final ImageView snapshotView = new ImageView(transitioningView.getContext());
+        final Bitmap snapshot = getSnapshotOfTransitioningView(transitioningView);
+
+        snapshotView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        snapshotView.setImageBitmap(snapshot);
+
+        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                snapshot.getWidth(),
+                snapshot.getHeight());
+
+        snapshotView.setLayoutParams(layoutParams);
+        return snapshotView;
+    }
+    private static Bitmap getSnapshotOfTransitioningView(final View transitioningView) {
         final Bitmap bitmap = Bitmap.createBitmap(
                 transitioningView.getWidth(),
                 transitioningView.getHeight(),
@@ -131,18 +156,7 @@ public class SharedElementTransition {
         final Canvas canvas = new Canvas(bitmap);
         transitioningView.draw(canvas);
 
-        newView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        newView.setImageBitmap(bitmap);
-        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                canvas.getWidth(),
-                canvas.getHeight());
-        newView.setLayoutParams(layoutParams);
-        mParent.addView(newView);
-
-        newView.setX(coordinates.x);
-        newView.setY(coordinates.y);
-
-        return newView;
+        return bitmap;
     }
 
     private static Optional<View> findTransitioningView(final View view,

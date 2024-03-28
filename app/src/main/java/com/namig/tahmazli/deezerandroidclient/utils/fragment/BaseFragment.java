@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -47,6 +48,21 @@ public abstract class BaseFragment<V extends MvpView, VM extends BaseViewModel<V
                 mViewModel = new ViewModelProvider(this, mFactoryInjector).get(viewModelClass);
             }
         }
+
+        requireActivity().getOnBackPressedDispatcher()
+                .addCallback(this, new OnBackPressedCallback(shouldInterceptBackPress()) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        onBackPressed();
+                    }
+                });
+    }
+
+    protected boolean shouldInterceptBackPress() {
+        return false;
+    }
+
+    protected void onBackPressed() {
     }
 
     @Override

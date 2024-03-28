@@ -1,10 +1,8 @@
 package com.namig.tahmazli.deezerandroidclient.artists;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -26,14 +24,12 @@ public class ArtistsFragment extends BaseFragment<ArtistsView, ArtistsViewModel>
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requireActivity().getOnBackPressedDispatcher()
-                .addCallback(this, new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        getViewModel().navigateBack();
-                    }
-                });
+    protected boolean shouldInterceptBackPress() {
+        return true;
+    }
+
+    @Override
+    protected void onBackPressed() {
+        getViewModel().navigateBack();
     }
 }
