@@ -88,6 +88,7 @@ class GenresListAdapter extends ListAdapter<Genre, GenresListAdapter.GenresViewH
             genreImage.setTransitionName("genre_image");
 
             genreTitle.setText(genre.name());
+            genreTitle.setTransitionName("genre_title");
 
             itemView.setOnClickListener(mClickListener);
         }

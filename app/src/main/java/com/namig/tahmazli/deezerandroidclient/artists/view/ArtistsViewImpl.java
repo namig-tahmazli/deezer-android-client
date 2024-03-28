@@ -15,12 +15,12 @@ import com.namig.tahmazli.deezerandroidclient.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class ArtistsViewImpl extends BaseView implements ArtistsView {
     private final HeaderAdapter mHeaderAdapter;
     private final SharedElementTransition mSharedElementTransition;
     private final RecyclerView mArtistsList;
+    private final String[] mSharedElements = new String[]{"genre_image", "genre_title"};
 
     public ArtistsViewImpl(final LayoutInflater inflater,
                            final ViewGroup parent,
@@ -52,14 +52,14 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
     @Override
     public void startSharedElementTransition(Genre genre) {
         ViewUtils.getNotifiedWhenViewIsAttached(mArtistsList, 0,
-                v -> mSharedElementTransition.transition(v, "genre_image"));
+                v -> mSharedElementTransition.transition(v, mSharedElements));
     }
 
     @Override
     public void enqueueSharedElementReturnTransition() {
         final var viewHolder = mArtistsList.findViewHolderForLayoutPosition(0);
         Objects.requireNonNull(viewHolder);
-        mSharedElementTransition.enqueue(viewHolder.itemView, "genre_image");
+        mSharedElementTransition.enqueue(viewHolder.itemView, mSharedElements);
     }
 
     private static class CustomSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {

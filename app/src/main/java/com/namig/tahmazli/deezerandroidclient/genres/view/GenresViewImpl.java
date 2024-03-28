@@ -17,7 +17,6 @@ import com.namig.tahmazli.deezerandroidclient.utils.ViewUtils;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 public class GenresViewImpl extends BaseView implements GenresView {
@@ -26,6 +25,7 @@ public class GenresViewImpl extends BaseView implements GenresView {
     private final ProgressBar mProgressBar;
     private final RecyclerView mGenresList;
     private final SharedElementTransition mSharedElementTransition;
+    private final String[] mSharedElements = new String[]{"genre_image", "genre_title"};
 
     public GenresViewImpl(final LayoutInflater inflater,
                           @Nullable final ViewGroup parent,
@@ -93,7 +93,7 @@ public class GenresViewImpl extends BaseView implements GenresView {
         final var viewHolder = mGenresList.findViewHolderForAdapterPosition(index);
         Objects.requireNonNull(viewHolder,
                 String.format("Could not find view for %s", genre));
-        mSharedElementTransition.enqueue(viewHolder.itemView, "genre_image");
+        mSharedElementTransition.enqueue(viewHolder.itemView, mSharedElements);
     }
 
     @Override
@@ -108,6 +108,6 @@ public class GenresViewImpl extends BaseView implements GenresView {
                 ));
 
         ViewUtils.getNotifiedWhenViewIsAttached(mGenresList, position,
-                v -> mSharedElementTransition.transition(v, "genre_image"));
+                v -> mSharedElementTransition.transition(v, mSharedElements));
     }
 }

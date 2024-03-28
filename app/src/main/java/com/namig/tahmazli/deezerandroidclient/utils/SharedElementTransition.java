@@ -40,22 +40,26 @@ public class SharedElementTransition {
     }
 
     public void enqueue(final View view,
-                        final String transitionName) {
-        ViewUtils.ensureViewIsLaidOut(view, v -> {
-            final Transition transition = create(v, transitionName);
-            mEnqueuedTransitions.put(transitionName, transition);
-        });
+                        final String[] transitionNames) {
+        for (String transitionName : transitionNames) {
+            ViewUtils.ensureViewIsLaidOut(view, v -> {
+                final Transition transition = create(v, transitionName);
+                mEnqueuedTransitions.put(transitionName, transition);
+            });
+        }
     }
 
     public void transition(final View view,
-                           final String transitionName) {
-        final Transition transition = mEnqueuedTransitions.get(transitionName);
-        Objects.requireNonNull(transition,
-                String.format("Could not find a transition for %s",
-                        transitionName));
+                           final String[] transitionNames) {
+        for (String transitionName : transitionNames) {
+            final Transition transition = mEnqueuedTransitions.get(transitionName);
+            Objects.requireNonNull(transition,
+                    String.format("Could not find a transition for %s",
+                            transitionName));
 
-        ViewUtils.ensureViewIsLaidOut(view, v ->
-                transition(transition, v, transitionName));
+            ViewUtils.ensureViewIsLaidOut(view, v ->
+                    transition(transition, v, transitionName));
+        }
     }
 
     private void transition(final Transition activeTransition,

@@ -3,6 +3,7 @@ package com.namig.tahmazli.deezerandroidclient.artists.view;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.AsyncDifferConfig;
@@ -54,15 +55,20 @@ class HeaderAdapter extends ListAdapter<Header, HeaderAdapter.HeaderViewHolder> 
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private final GenreImageView mGenreImage;
+        private final TextView mGenreTitle;
 
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
             mGenreImage = itemView.findViewById(R.id.genre_image);
+            mGenreTitle = itemView.findViewById(R.id.genre_title);
         }
 
         void bind(final Genre genre) {
             mGenreImage.load(genre.image());
+            mGenreTitle.setText(genre.name());
+
             mGenreImage.setTransitionName("genre_image");
+            mGenreTitle.setTransitionName("genre_title");
         }
     }
 }
