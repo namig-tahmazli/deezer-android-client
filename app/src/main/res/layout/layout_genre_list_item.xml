@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.namig.tahmazli.deezerandroidclient.utils.GenreImageView
+    <com.namig.tahmazli.deezerandroidclient.view.GenreImageView
         android:id="@+id/genre_image"
         android:layout_width="0dp"
         android:layout_height="0dp"

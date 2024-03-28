@@ -1,4 +1,4 @@
-package com.namig.tahmazli.deezerandroidclient.utils;
+package com.namig.tahmazli.deezerandroidclient.utils.view;
 
 import android.animation.ValueAnimator;
 

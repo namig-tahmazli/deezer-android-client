@@ -4,7 +4,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.namig.tahmazli.deezerandroidclient.di.android.ActivityScope;
 import com.namig.tahmazli.deezerandroidclient.main.MainActivity;
-import com.namig.tahmazli.deezerandroidclient.utils.SharedElementTransition;
+import com.namig.tahmazli.deezerandroidclient.utils.view.SharedElementTransition;
 
 import dagger.Module;
 import dagger.Provides;

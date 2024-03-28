@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.namig.tahmazli.deezerandroidclient.R;
 import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
-import com.namig.tahmazli.deezerandroidclient.utils.GenreImageView;
+import com.namig.tahmazli.deezerandroidclient.view.GenreImageView;
 
 import java.util.Objects;
 import java.util.concurrent.Executors;

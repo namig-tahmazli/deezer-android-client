@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.namig.tahmazli.deezerandroidclient.R;
 import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
-import com.namig.tahmazli.deezerandroidclient.utils.BaseView;
-import com.namig.tahmazli.deezerandroidclient.utils.SharedElementTransition;
-import com.namig.tahmazli.deezerandroidclient.utils.ViewUtils;
+import com.namig.tahmazli.deezerandroidclient.utils.view.BaseView;
+import com.namig.tahmazli.deezerandroidclient.utils.view.SharedElementTransition;
+import com.namig.tahmazli.deezerandroidclient.utils.view.ViewUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,11 +72,6 @@ public class GenresViewImpl extends BaseView implements GenresView {
     @Override
     public void displayGenres(List<Genre> genres) {
         mAdapter.submitList(genres);
-    }
-
-    @Override
-    public void hideGenres() {
-
     }
 
     @Override

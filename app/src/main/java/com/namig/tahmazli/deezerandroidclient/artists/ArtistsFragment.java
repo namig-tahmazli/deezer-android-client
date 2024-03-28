@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.namig.tahmazli.deezerandroidclient.artists.view.ArtistsView;
 import com.namig.tahmazli.deezerandroidclient.artists.view.ArtistsViewImpl;
-import com.namig.tahmazli.deezerandroidclient.utils.SharedElementTransition;
+import com.namig.tahmazli.deezerandroidclient.utils.view.SharedElementTransition;
 import com.namig.tahmazli.deezerandroidclient.utils.fragment.BaseFragment;
 
 import javax.inject.Inject;

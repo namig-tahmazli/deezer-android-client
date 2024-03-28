@@ -1,4 +1,4 @@
-package com.namig.tahmazli.deezerandroidclient.utils;
+package com.namig.tahmazli.deezerandroidclient.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

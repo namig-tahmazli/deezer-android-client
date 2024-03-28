@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.namig.tahmazli.deezerandroidclient.di.android.AndroidInjection;
 import com.namig.tahmazli.deezerandroidclient.di.android.ViewModelFactory;
 import com.namig.tahmazli.deezerandroidclient.utils.BaseViewModel;
-import com.namig.tahmazli.deezerandroidclient.utils.MvpView;
+import com.namig.tahmazli.deezerandroidclient.utils.view.MvpView;
 import com.namig.tahmazli.deezerandroidclient.utils.presenter.Presenter;
 
 import java.lang.reflect.ParameterizedType;

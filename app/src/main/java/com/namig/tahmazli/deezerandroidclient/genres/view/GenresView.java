@@ -1,7 +1,7 @@
 package com.namig.tahmazli.deezerandroidclient.genres.view;
 
 import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
-import com.namig.tahmazli.deezerandroidclient.utils.MvpView;
+import com.namig.tahmazli.deezerandroidclient.utils.view.MvpView;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -19,8 +19,6 @@ public interface GenresView extends MvpView {
     void hideError();
 
     void displayGenres(final List<Genre> genres);
-
-    void hideGenres();
 
     void enqueueSharedElementTransition(final Genre genre);
 

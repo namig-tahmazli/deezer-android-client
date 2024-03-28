@@ -1,4 +1,4 @@
-package com.namig.tahmazli.deezerandroidclient.utils;
+package com.namig.tahmazli.deezerandroidclient.utils.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -16,8 +16,8 @@ public final class TransitionAnimators {
     }
 
     public static Animator createBoundsAnimator(final Size startBounds,
-                                                 final Size endBounds,
-                                                 final View view) {
+                                                final Size endBounds,
+                                                final View view) {
         final FrameLayout.LayoutParams layoutParams =
                 (FrameLayout.LayoutParams) view.getLayoutParams();
 
@@ -44,8 +44,8 @@ public final class TransitionAnimators {
     }
 
     public static Animator createXYAnimator(final PointF startPosition,
-                                             final PointF endPosition,
-                                             final View view) {
+                                            final PointF endPosition,
+                                            final View view) {
         final ValueAnimator xAnimator = AnimatorUtils.createAnimatorOfFloat(
                 view::setX,
                 startPosition.x, endPosition.x);
