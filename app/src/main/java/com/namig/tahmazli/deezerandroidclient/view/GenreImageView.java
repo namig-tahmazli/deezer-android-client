@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.namig.tahmazli.deezerandroidclient.R;
 
@@ -57,6 +58,7 @@ public class GenreImageView extends ConstraintLayout implements RequestListener<
             useDownloadedBitmap(bitmap);
         } else {
             Glide.with(mGenreImage)
+                    .applyDefaultRequestOptions(RequestOptions.centerCropTransform())
                     .load(url)
                     .addListener(this)
                     .submit();

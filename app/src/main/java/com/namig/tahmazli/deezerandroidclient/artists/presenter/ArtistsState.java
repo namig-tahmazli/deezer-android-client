@@ -6,16 +6,23 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.namig.tahmazli.deezerandroidclient.interactors.Artist;
 import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class ArtistsState implements Parcelable {
     @Nullable
     Genre genre;
     boolean isSharedElementTransitionStarted = false;
+    boolean isLoading = true;
+    public List<Artist> loadedArtists = new ArrayList<>();
 
     protected ArtistsState(Parcel in) {
         genre = in.readParcelable(Genre.class.getClassLoader());
         isSharedElementTransitionStarted = in.readByte() != 0;
+        isLoading = in.readByte() != 0;
     }
 
     ArtistsState() {
@@ -42,5 +49,6 @@ class ArtistsState implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(genre, flags);
         dest.writeByte((byte) (isSharedElementTransitionStarted ? 1 : 0));
+        dest.writeByte((byte) (isLoading ? 1 : 0));
     }
 }

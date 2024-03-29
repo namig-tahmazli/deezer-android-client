@@ -18,7 +18,7 @@ import com.namig.tahmazli.deezerandroidclient.view.GenreImageView;
 
 import java.util.concurrent.Executors;
 
-class HeaderAdapter extends ListAdapter<Header, HeaderAdapter.HeaderViewHolder> {
+final class HeaderAdapter extends ListAdapter<Header, HeaderAdapter.HeaderViewHolder> {
 
     static HeaderAdapter newInstance() {
         final DiffUtil.ItemCallback<Header> itemCallback = new DiffUtil.ItemCallback<>() {

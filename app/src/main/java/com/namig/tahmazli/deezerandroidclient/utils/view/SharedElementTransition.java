@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class SharedElementTransition {
+public final class SharedElementTransition {
 
     public static final String TAG = SharedElementTransition.class.getSimpleName();
 
@@ -84,6 +84,15 @@ public class SharedElementTransition {
                 targetView.getMeasuredWidth(),
                 targetView.getMeasuredHeight());
 
+        if (transitioningView instanceof ImageView iv) {
+            if (startSize.getHeight() > endSize.getHeight() ||
+                    startSize.getWidth() > endSize.getWidth()) {
+                iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else {
+                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+        }
+
         final AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
                 TransitionAnimators.createXYAnimator(startPoint, endPoint, transitioningView),
@@ -139,6 +148,8 @@ public class SharedElementTransition {
     }
 
     private static View createSnapshotViewOfTransitioningView(final View transitioningView) {
+
+
         final ImageView snapshotView = new ImageView(transitioningView.getContext());
         final Bitmap snapshot = getSnapshotOfTransitioningView(transitioningView);
 
@@ -152,6 +163,7 @@ public class SharedElementTransition {
         snapshotView.setLayoutParams(layoutParams);
         return snapshotView;
     }
+
     private static Bitmap getSnapshotOfTransitioningView(final View transitioningView) {
         final Bitmap bitmap = Bitmap.createBitmap(
                 transitioningView.getWidth(),
