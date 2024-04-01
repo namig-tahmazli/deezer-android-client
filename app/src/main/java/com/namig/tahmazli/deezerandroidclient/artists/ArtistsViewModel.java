@@ -14,7 +14,8 @@ import dagger.assisted.Assisted;
 import dagger.assisted.AssistedFactory;
 import dagger.assisted.AssistedInject;
 
-public class ArtistsViewModel extends BaseViewModel<ArtistsView, ArtistsPresenter> {
+public class ArtistsViewModel extends BaseViewModel<ArtistsView, ArtistsPresenter>
+        implements ArtistsView.Listener {
     private final Navigator mNavigator;
     private final FetchArtistsAndDisplayThemUseCase mFetchArtistsAndDisplayThemUseCase;
     private final Genre mSelectedGenre;
@@ -39,6 +40,11 @@ public class ArtistsViewModel extends BaseViewModel<ArtistsView, ArtistsPresente
         super.onCleared();
     }
 
+    @Override
+    public void onSharedElementTransitionEnqueued() {
+        mNavigator.navigateBack();
+    }
+
     @AssistedFactory
     public interface Factory extends ViewModelFactory<ArtistsViewModel> {
     }
@@ -47,7 +53,6 @@ public class ArtistsViewModel extends BaseViewModel<ArtistsView, ArtistsPresente
 
     void navigateBack() {
         mPresenter.startSharedElementReturnTransition();
-        mNavigator.navigateBack();
     }
 
     void loadArtists() {

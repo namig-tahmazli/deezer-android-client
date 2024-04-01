@@ -30,12 +30,15 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
     private final RecyclerView mArtistsList;
     private final String[] mSharedElements = new String[]{"genre_image", "genre_title"};
     private static final int SPAN_COUNT = 3;
+    private final Listener mListener;
 
     public ArtistsViewImpl(final LayoutInflater inflater,
                            final ViewGroup parent,
-                           final SharedElementTransition sharedElementTransition) {
+                           final SharedElementTransition sharedElementTransition,
+                           final Listener listener) {
         super(inflater, parent, R.layout.fragment_artists);
         mSharedElementTransition = sharedElementTransition;
+        mListener = listener;
 
         mArtistsList = findViewById(R.id.artists_list);
         final GridLayoutManager layoutManager = new GridLayoutManager(
@@ -71,8 +74,12 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
     @Override
     public void enqueueSharedElementReturnTransition() {
         final var viewHolder = mArtistsList.findViewHolderForLayoutPosition(0);
-        Objects.requireNonNull(viewHolder);
-        mSharedElementTransition.enqueue(viewHolder.itemView, mSharedElements);
+        if (viewHolder != null) {
+            mSharedElementTransition.enqueue(viewHolder.itemView, mSharedElements);
+            mListener.onSharedElementTransitionEnqueued();
+        } else {
+            mArtistsList.smoothScrollToPosition(0);
+        }
     }
 
     @Override
@@ -94,7 +101,7 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
         @Override
         public int getSpanSize(int position) {
             final var lastIndex = Objects.requireNonNull(mArtistsList.getAdapter(),
-                    "Recyclerview is not assigned an adapter")
+                            "Recyclerview is not assigned an adapter")
                     .getItemCount() - 1;
             if (position == 0 || position == lastIndex)
                 return SPAN_COUNT;
@@ -119,7 +126,7 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
             final int spacing = DimensionUtils.getDp(16);
 
             int left;
-            if(pos % SPAN_COUNT != 1) {
+            if (pos % SPAN_COUNT != 1) {
                 left = spacing / 2;
             } else {
                 left = spacing;

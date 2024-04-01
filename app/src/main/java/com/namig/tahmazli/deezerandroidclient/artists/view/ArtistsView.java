@@ -13,4 +13,8 @@ public interface ArtistsView extends MvpView {
     void displayLoader();
     void hideLoader();
     void displayArtists(final List<Artist> artists);
+
+    interface Listener {
+        void onSharedElementTransitionEnqueued();
+    }
 }

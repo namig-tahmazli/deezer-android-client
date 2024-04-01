@@ -39,8 +39,7 @@ public final class ViewUtils {
         recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(@NonNull View view) {
-                int pos = recyclerView.getChildViewHolder(view)
-                        .getBindingAdapterPosition();
+                int pos = recyclerView.getChildAdapterPosition(view);
                 if (pos == position) {
                     notifier.notify(view);
                     recyclerView.removeOnChildAttachStateChangeListener(this);

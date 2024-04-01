@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.namig.tahmazli.deezerandroidclient.di.DaggerApplicationComponent;
 import com.namig.tahmazli.deezerandroidclient.di.android.AndroidInjector;
 import com.namig.tahmazli.deezerandroidclient.di.android.HasActivityInjector;
 
 import javax.inject.Inject;
 
-public class App extends Application implements HasActivityInjector {
+public final class App extends Application implements HasActivityInjector {
 
     @Inject
     AndroidInjector<Activity> activityInjector;
@@ -27,8 +25,7 @@ public class App extends Application implements HasActivityInjector {
         DaggerApplicationComponent.factory().create(this).inject(this);
         super.onCreate();
 
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            Log.e("UNHANDLED_EXCEPTION", t.getName(), e);
-        });
+        Thread.setDefaultUncaughtExceptionHandler((t, e) ->
+                Log.e("UNHANDLED_EXCEPTION", t.getName(), e));
     }
 }
