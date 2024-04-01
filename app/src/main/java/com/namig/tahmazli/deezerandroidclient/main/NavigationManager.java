@@ -56,7 +56,12 @@ class NavigationManager {
             if (args != null)
                 fragment.setArguments(args);
 
-            transaction
+
+            transaction.setCustomAnimations(
+                            R.anim.from_right_to_center,
+                            R.anim.from_center_to_left,
+                            R.anim.from_left_to_center,
+                            R.anim.from_center_to_right)
                     .replace(R.id.fragmentContainer, fragment, tag)
                     .addToBackStack(tag)
                     .setPrimaryNavigationFragment(fragment);

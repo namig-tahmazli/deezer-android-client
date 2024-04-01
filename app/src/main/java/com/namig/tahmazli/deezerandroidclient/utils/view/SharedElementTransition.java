@@ -18,6 +18,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.namig.tahmazli.deezerandroidclient.R;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -30,6 +32,7 @@ public final class SharedElementTransition {
 
     private final FrameLayout mParent;
     private final Map<String, Transition> mEnqueuedTransitions = new HashMap<>();
+    private final int TRANSITION_ANIM_DURATION;
 
     public SharedElementTransition(final Window window) {
         mParent = new FrameLayout(window.getContext());
@@ -37,6 +40,8 @@ public final class SharedElementTransition {
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT
         ));
+        TRANSITION_ANIM_DURATION = window.getContext()
+                .getResources().getInteger(R.integer.transition_anim_duration);
     }
 
     public void enqueue(final View view,
@@ -94,6 +99,7 @@ public final class SharedElementTransition {
         }
 
         final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(TRANSITION_ANIM_DURATION);
         animatorSet.playTogether(
                 TransitionAnimators.createXYAnimator(startPoint, endPoint, transitioningView),
                 TransitionAnimators.createBoundsAnimator(startSize, endSize, transitioningView)
@@ -132,6 +138,8 @@ public final class SharedElementTransition {
 
         final PointF positionOnWindow = calculateViewPositionOnWindow(view);
         final var snapshotView = drawSnapshotOfTransitioningViewOnWindow(view, positionOnWindow);
+
+        view.setVisibility(View.INVISIBLE);
         return new Transition(snapshotView, positionOnWindow);
     }
 
