@@ -49,7 +49,7 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
         mArtistsList.setLayoutManager(layoutManager);
 
         mHeaderAdapter = HeaderAdapter.newInstance();
-        mArtistsAdapter = ArtistsAdapter.newInstance();
+        mArtistsAdapter = ArtistsAdapter.newInstance(listener::onArtistClicked);
         mLoaderAdapter = LoaderAdapter.newInstance();
 
         final ConcatAdapter adapter = new ConcatAdapter(mHeaderAdapter, mArtistsAdapter, mLoaderAdapter);
@@ -72,14 +72,26 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
     }
 
     @Override
+    public void startSharedElementReturnTransition(Artist artist) {
+        final int index = ViewUtils.indexOfItem(mArtistsAdapter, artist,
+                (f, s) -> f.id() == s.id());
+        ViewUtils.getNotifiedWhenViewIsAttached(mArtistsList, index + 1,
+                v -> mSharedElementTransition.transition(v, new String[]{"artist-image"}));
+    }
+
+    @Override
+    public void enqueueSharedElementTransition(Artist artist) {
+        final int index = ViewUtils.indexOfItem(mArtistsAdapter, artist,
+                (f, s) -> f.id() == s.id());
+        mSharedElementTransition.enqueue(mArtistsList, index + 1,
+                new String[]{"artist-image"},
+                mListener::onSharedElementTransitionEnqueued);
+    }
+
+    @Override
     public void enqueueSharedElementReturnTransition() {
-        final var viewHolder = mArtistsList.findViewHolderForLayoutPosition(0);
-        if (viewHolder != null) {
-            mSharedElementTransition.enqueue(viewHolder.itemView, mSharedElements);
-            mListener.onSharedElementTransitionEnqueued();
-        } else {
-            mArtistsList.smoothScrollToPosition(0);
-        }
+        mSharedElementTransition.enqueue(mArtistsList, 0, mSharedElements,
+                mListener::onSharedElementReturnTransitionEnqueued);
     }
 
     @Override

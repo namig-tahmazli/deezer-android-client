@@ -4,7 +4,13 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public final class ViewUtils {
     private ViewUtils() {
@@ -26,6 +32,32 @@ public final class ViewUtils {
                 });
             }
         }
+    }
+
+    public static void ensureViewIsPreDrawn(final View view,
+                                            final ViewLayoutNotifier notifier) {
+        view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                notifier.notify(view);
+                view.getViewTreeObserver().removeOnPreDrawListener(this);
+                return true;
+            }
+        });
+    }
+
+    public static <T> int indexOfItem(final ListAdapter<T, ?> adapter,
+                                      final T item,
+                                      final BiFunction<T, T, Boolean> comparator) {
+        final List<T> items = adapter.getCurrentList();
+
+        return IntStream.range(0, items.size())
+                .filter(i -> comparator.apply(items.get(i), item))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("Could not find item %s in the list",
+                                item)
+                ));
     }
 
     public interface ViewLayoutNotifier {

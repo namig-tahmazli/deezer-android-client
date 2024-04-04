@@ -7,9 +7,11 @@ import androidx.annotation.NonNull;
 
 public record Artist(int id,
                      String name,
-                     String image) implements Parcelable {
+                     String image,
+                     String imageLarge) implements Parcelable {
     public Artist(Parcel in) {
         this(in.readInt(),
+                in.readString(),
                 in.readString(),
                 in.readString());
     }
@@ -36,5 +38,6 @@ public record Artist(int id,
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(image);
+        dest.writeString(imageLarge);
     }
 }

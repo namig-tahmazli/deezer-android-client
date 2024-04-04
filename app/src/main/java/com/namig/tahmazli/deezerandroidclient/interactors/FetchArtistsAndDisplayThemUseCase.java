@@ -37,7 +37,8 @@ public class FetchArtistsAndDisplayThemUseCase extends UseCaseObservable<FetchAr
                         .map(dto -> new Artist(
                                 dto.id(),
                                 dto.name(),
-                                dto.pictureMedium()))
+                                dto.pictureMedium(),
+                                dto.pictureBig()))
                         .collect(Collectors.toList());
 
                 notifyListeners(l -> l.showArtists(artists));

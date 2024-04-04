@@ -16,8 +16,6 @@ import com.namig.tahmazli.deezerandroidclient.utils.view.SharedElementTransition
 import com.namig.tahmazli.deezerandroidclient.utils.view.ViewUtils;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class GenresViewImpl extends BaseView implements GenresView {
 
@@ -26,6 +24,7 @@ public class GenresViewImpl extends BaseView implements GenresView {
     private final RecyclerView mGenresList;
     private final SharedElementTransition mSharedElementTransition;
     private final String[] mSharedElements = new String[]{"genre_image", "genre_title"};
+    private final GenresView.Listener mListener;
 
     public GenresViewImpl(final LayoutInflater inflater,
                           @Nullable final ViewGroup parent,
@@ -33,6 +32,7 @@ public class GenresViewImpl extends BaseView implements GenresView {
                           final SharedElementTransition sharedElementTransition) {
         super(inflater, parent, R.layout.fragment_genres);
         mSharedElementTransition = sharedElementTransition;
+        mListener = listener;
 
         mGenresList = findViewById(R.id.genres_list);
         final GridLayoutManager layoutManager = new GridLayoutManager(
@@ -76,33 +76,15 @@ public class GenresViewImpl extends BaseView implements GenresView {
 
     @Override
     public void enqueueSharedElementTransition(Genre genre) {
-        final List<Genre> genreList = mAdapter.getCurrentList();
-        final int index = IntStream.range(0, genreList.size())
-                .filter(i -> genreList.get(i).id() == genre.id())
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                        String.format("Could not find genre %s in the list",
-                                genre)
-                ));
-
-        final var viewHolder = mGenresList.findViewHolderForAdapterPosition(index);
-        Objects.requireNonNull(viewHolder,
-                String.format("Could not find view for %s", genre));
-        mSharedElementTransition.enqueue(viewHolder.itemView, mSharedElements);
+        final var index = ViewUtils.indexOfItem(mAdapter, genre, (f, s) -> f.id() == s.id());
+        mSharedElementTransition.enqueue(mGenresList, index, mSharedElements,
+                mListener::onSharedElementTransitionEnqueued);
     }
 
     @Override
     public void startSharedElementReturnTransition(Genre genre) {
-        List<Genre> genreList = mAdapter.getCurrentList();
-        final int position = IntStream.range(0, genreList.size())
-                .filter(i -> genreList.get(i).id() == genre.id())
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                        String.format("Could not find genre %s in the list",
-                                genre)
-                ));
-
-        ViewUtils.getNotifiedWhenViewIsAttached(mGenresList, position,
+        final var index = ViewUtils.indexOfItem(mAdapter, genre, (f, s) -> f.id() == s.id());
+        ViewUtils.getNotifiedWhenViewIsAttached(mGenresList, index,
                 v -> mSharedElementTransition.transition(v, mSharedElements));
     }
 }

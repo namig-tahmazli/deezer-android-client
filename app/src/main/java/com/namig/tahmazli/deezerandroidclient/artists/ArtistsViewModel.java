@@ -5,10 +5,13 @@ import androidx.lifecycle.SavedStateHandle;
 import com.namig.tahmazli.deezerandroidclient.artists.presenter.ArtistsPresenter;
 import com.namig.tahmazli.deezerandroidclient.artists.view.ArtistsView;
 import com.namig.tahmazli.deezerandroidclient.di.android.ViewModelFactory;
+import com.namig.tahmazli.deezerandroidclient.interactors.Artist;
 import com.namig.tahmazli.deezerandroidclient.interactors.FetchArtistsAndDisplayThemUseCase;
 import com.namig.tahmazli.deezerandroidclient.interactors.Genre;
 import com.namig.tahmazli.deezerandroidclient.main.Navigator;
 import com.namig.tahmazli.deezerandroidclient.utils.BaseViewModel;
+
+import java.util.Objects;
 
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedFactory;
@@ -19,6 +22,7 @@ public class ArtistsViewModel extends BaseViewModel<ArtistsView, ArtistsPresente
     private final Navigator mNavigator;
     private final FetchArtistsAndDisplayThemUseCase mFetchArtistsAndDisplayThemUseCase;
     private final Genre mSelectedGenre;
+    private Artist mSelectedArtist;
 
     @AssistedInject
     public ArtistsViewModel(@Assisted final SavedStateHandle handle,
@@ -41,8 +45,19 @@ public class ArtistsViewModel extends BaseViewModel<ArtistsView, ArtistsPresente
     }
 
     @Override
-    public void onSharedElementTransitionEnqueued() {
+    public void onSharedElementReturnTransitionEnqueued() {
         mNavigator.navigateBack();
+    }
+
+    @Override
+    public void onSharedElementTransitionEnqueued() {
+        mNavigator.navigateToArtist(Objects.requireNonNull(mSelectedArtist), mSelectedGenre.image());
+    }
+
+    @Override
+    public void onArtistClicked(Artist artist) {
+        mSelectedArtist = artist;
+        mPresenter.startSharedElementTransition(artist);
     }
 
     @AssistedFactory

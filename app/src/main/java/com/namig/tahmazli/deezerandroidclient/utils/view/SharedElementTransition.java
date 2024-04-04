@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.namig.tahmazli.deezerandroidclient.R;
 
@@ -42,6 +43,32 @@ public final class SharedElementTransition {
         ));
         TRANSITION_ANIM_DURATION = window.getContext()
                 .getResources().getInteger(R.integer.transition_anim_duration);
+    }
+
+    public void enqueue(final RecyclerView recyclerView,
+                        final int adapterPosition,
+                        final String[] transitionNames,
+                        final Runnable onEnqueued) {
+        final var viewHolder = recyclerView.findViewHolderForAdapterPosition(adapterPosition);
+        if (viewHolder != null) {
+            enqueue(viewHolder.itemView, transitionNames);
+            onEnqueued.run();
+        } else {
+            ViewUtils.getNotifiedWhenViewIsAttached(recyclerView, adapterPosition,
+                    v -> recyclerView.postDelayed(() -> {
+                        if (v.isLaidOut() && v.isAttachedToWindow()) {
+                            enqueue(v, transitionNames);
+                            onEnqueued.run();
+                        } else {
+                            v.requestLayout();
+                            ViewUtils.ensureViewIsPreDrawn(v, view -> {
+                                enqueue(view, transitionNames);
+                                onEnqueued.run();
+                            });
+                        }
+                    }, 100));
+            recyclerView.scrollToPosition(adapterPosition);
+        }
     }
 
     public void enqueue(final View view,

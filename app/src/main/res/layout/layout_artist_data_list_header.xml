@@ -5,33 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <com.namig.tahmazli.deezerandroidclient.view.GenreImageView
+        android:id="@+id/genre_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H, 1.5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.namig.tahmazli.deezerandroidclient.view.ArtistImageView
         android:id="@+id/artist_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:cardBackgroundColor="@color/purple_200"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@id/artist_name"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="H, 1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+        app:layout_constraintWidth_percent="0.4" />
 
     <TextView
         android:id="@+id/artist_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="16dp"
         android:fontFamily="@font/abril_fatface"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/artist_image"
-        tools:text="Artist Name" />
+        app:layout_constraintTop_toBottomOf="@+id/artist_image"
+        tools:text="Artist Name"
+        tools:textColor="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

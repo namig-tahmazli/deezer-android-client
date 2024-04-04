@@ -18,6 +18,7 @@ class ArtistsState implements Parcelable {
     boolean isSharedElementTransitionStarted = false;
     boolean isLoading = true;
     public List<Artist> loadedArtists = new ArrayList<>();
+    public Artist transitioningArtist;
 
     protected ArtistsState(Parcel in) {
         genre = in.readParcelable(Genre.class.getClassLoader());

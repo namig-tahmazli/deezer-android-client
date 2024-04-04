@@ -26,9 +26,10 @@ public class ArtistsPresenter extends Presenter<ArtistsView, ArtistsState>
         final Genre genre = mState.genre;
         if (genre != null) {
             artistsView.displayGenre(genre);
-            artistsView.startSharedElementTransition(genre);
-
-            mState.isSharedElementTransitionStarted = true;
+            if (!mState.isSharedElementTransitionStarted) {
+                artistsView.startSharedElementTransition(genre);
+                mState.isSharedElementTransitionStarted = true;
+            }
         }
 
         if (mState.isLoading) {
@@ -38,6 +39,11 @@ public class ArtistsPresenter extends Presenter<ArtistsView, ArtistsState>
         }
 
         artistsView.displayArtists(mState.loadedArtists);
+
+        if (mState.transitioningArtist != null) {
+            artistsView.startSharedElementReturnTransition(mState.transitioningArtist);
+            mState.transitioningArtist = null;
+        }
     }
 
     public void displayGenreInfo(final Genre genre) {
@@ -47,6 +53,11 @@ public class ArtistsPresenter extends Presenter<ArtistsView, ArtistsState>
 
     public void startSharedElementReturnTransition() {
         updateView(ArtistsView::enqueueSharedElementReturnTransition);
+    }
+
+    public void startSharedElementTransition(final Artist artist) {
+        mState.transitioningArtist = artist;
+        updateView(v -> v.enqueueSharedElementTransition(artist));
     }
 
     @Override
