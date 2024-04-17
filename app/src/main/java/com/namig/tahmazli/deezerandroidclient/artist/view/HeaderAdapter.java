@@ -80,6 +80,7 @@ final class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.HeaderViewH
             mArtistImage = itemView.findViewById(R.id.artist_image);
             mArtistImage.setTransitionName("artist-image");
             mArtistName = itemView.findViewById(R.id.artist_name);
+            mArtistName.setTransitionName("artist-name");
         }
 
         void bind(final Item item) {

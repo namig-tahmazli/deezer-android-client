@@ -74,6 +74,8 @@ final class ArtistsAdapter extends ListAdapter<Artist, ArtistsAdapter.ArtistsVie
             mArtistImage.setTransitionName("artist-image");
 
             mArtistName = itemView.findViewById(R.id.artist_name);
+            mArtistName.setTransitionName("artist-name");
+
             mOnClickListener = v -> clickListener.onItemClicked(Objects.requireNonNull(mArtist));
         }
 

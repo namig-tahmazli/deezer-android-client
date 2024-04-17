@@ -8,21 +8,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.namig.tahmazli.deezerandroidclient.R;
-import com.namig.tahmazli.deezerandroidclient.interactors.Artist;
 import com.namig.tahmazli.deezerandroidclient.utils.view.BaseView;
 import com.namig.tahmazli.deezerandroidclient.utils.view.SharedElementTransition;
 import com.namig.tahmazli.deezerandroidclient.utils.view.ViewUtils;
 
-import java.util.ArrayList;
-
 public final class ArtistViewImpl extends BaseView implements ArtistView {
     private final HeaderAdapter mHeaderAdapter;
-    private static final String[] mSharedTransitions = new String[] {
-        "artist-image"
-    };
+    private static final String[] mSharedTransitions = {"artist-image", "artist-name"};
     private final SharedElementTransition mSharedElementTransition;
     private final RecyclerView mArtistDataList;
     private final Listener mListener;
+
     public ArtistViewImpl(LayoutInflater inflater,
                           ViewGroup parent,
                           final SharedElementTransition sharedElementTransition,

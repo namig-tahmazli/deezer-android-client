@@ -6,22 +6,27 @@ import android.animation.AnimatorSet;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.os.Build;
 import android.util.Log;
 import android.util.Size;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.namig.tahmazli.deezerandroidclient.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -116,22 +121,42 @@ public final class SharedElementTransition {
                 targetView.getMeasuredWidth(),
                 targetView.getMeasuredHeight());
 
-        if (transitioningView instanceof ImageView iv) {
-            if (startSize.getHeight() > endSize.getHeight() ||
-                    startSize.getWidth() > endSize.getWidth()) {
-                iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            } else {
-                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(TRANSITION_ANIM_DURATION);
+        final List<Animator> animators = new ArrayList<>();
+        animators.add(TransitionAnimators.createXYAnimator(startPoint, endPoint, transitioningView));
+        animators.add(TransitionAnimators.createBoundsAnimator(startSize, endSize, transitioningView));
+
+        if (transitioningView instanceof TextView tvStart) {
+            if (targetView instanceof TextView tvEnd) {
+                final float startTextSize = tvStart.getTextSize();
+                Log.d(TAG, "transition: text start size: " + startTextSize);
+                final float endTextSize = tvEnd.getTextSize();
+                Log.d(TAG, "transition: text end size: " + endTextSize);
+                final var sizeAnimator = AnimatorUtils.createAnimatorOfFloat(
+                        (size) -> tvStart.setTextSize(TypedValue.COMPLEX_UNIT_PX, size),
+                        startTextSize,
+                        endTextSize);
+                final int startColor = tvStart.getCurrentTextColor();
+                final int endColor = tvEnd.getCurrentTextColor();
+
+                if (startColor != endColor) {
+                    final var colorAnimator = AnimatorUtils.createAnimatorOfColor(
+                            tvStart::setTextColor,
+                            startColor,
+                            endColor
+                    );
+
+                    animators.add(colorAnimator);
+                }
+
+                animators.add(sizeAnimator);
             }
         }
 
-        final AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(TRANSITION_ANIM_DURATION);
-        animatorSet.playTogether(
-                TransitionAnimators.createXYAnimator(startPoint, endPoint, transitioningView),
-                TransitionAnimators.createBoundsAnimator(startSize, endSize, transitioningView)
-        );
-        animatorSet.setInterpolator(new AnticipateInterpolator());
+        animatorSet.playTogether(animators);
+
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(@NonNull Animator animation) {
@@ -184,19 +209,39 @@ public final class SharedElementTransition {
 
     private static View createSnapshotViewOfTransitioningView(final View transitioningView) {
 
+        if (transitioningView instanceof TextView tv) {
+            final TextView textView = new TextView(tv.getContext());
+            textView.setText(tv.getText());
+            textView.setTextColor(tv.getCurrentTextColor());
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, tv.getTextSize());
+            textView.setTypeface(tv.getTypeface());
+            textView.setGravity(tv.getGravity());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                textView.setAllCaps(tv.isAllCaps());
+            }
 
-        final ImageView snapshotView = new ImageView(transitioningView.getContext());
-        final Bitmap snapshot = getSnapshotOfTransitioningView(transitioningView);
+            final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                    tv.getWidth(),
+                    tv.getHeight()
+            );
 
-        snapshotView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        snapshotView.setImageBitmap(snapshot);
+            textView.setLayoutParams(layoutParams);
 
-        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                snapshot.getWidth(),
-                snapshot.getHeight());
+            return textView;
+        } else {
+            final ImageView snapshotView = new ImageView(transitioningView.getContext());
+            final Bitmap snapshot = getSnapshotOfTransitioningView(transitioningView);
 
-        snapshotView.setLayoutParams(layoutParams);
-        return snapshotView;
+            snapshotView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            snapshotView.setImageBitmap(snapshot);
+
+            final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                    snapshot.getWidth(),
+                    snapshot.getHeight());
+
+            snapshotView.setLayoutParams(layoutParams);
+            return snapshotView;
+        }
     }
 
     private static Bitmap getSnapshotOfTransitioningView(final View transitioningView) {

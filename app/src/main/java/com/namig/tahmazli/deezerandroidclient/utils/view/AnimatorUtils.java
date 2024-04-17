@@ -1,5 +1,6 @@
 package com.namig.tahmazli.deezerandroidclient.utils.view;
 
+import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 
 public final class AnimatorUtils {
@@ -13,6 +14,16 @@ public final class AnimatorUtils {
             final AnimatorUpdateListener<Integer> listener,
             final int... values) {
         final ValueAnimator animator = ValueAnimator.ofInt(values);
+        animator.addUpdateListener(animation ->
+                listener.update((int) animation.getAnimatedValue()));
+        return animator;
+    }
+
+    public static ValueAnimator createAnimatorOfColor(
+            final AnimatorUpdateListener<Integer> listener,
+            final int startColor,
+            final int endColor) {
+        final ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), startColor, endColor);
         animator.addUpdateListener(animation ->
                 listener.update((int) animation.getAnimatedValue()));
         return animator;

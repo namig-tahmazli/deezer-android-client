@@ -8,6 +8,7 @@
         android:id="@+id/background_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="16dp"
         app:cardBackgroundColor="@color/purple_200"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toTopOf="@id/artist_name"

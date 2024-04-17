@@ -76,7 +76,8 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
         final int index = ViewUtils.indexOfItem(mArtistsAdapter, artist,
                 (f, s) -> f.id() == s.id());
         ViewUtils.getNotifiedWhenViewIsAttached(mArtistsList, index + 1,
-                v -> mSharedElementTransition.transition(v, new String[]{"artist-image"}));
+                v -> mSharedElementTransition.transition(v,
+                        new String[]{"artist-image", "artist-name"}));
     }
 
     @Override
@@ -84,7 +85,7 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
         final int index = ViewUtils.indexOfItem(mArtistsAdapter, artist,
                 (f, s) -> f.id() == s.id());
         mSharedElementTransition.enqueue(mArtistsList, index + 1,
-                new String[]{"artist-image"},
+                new String[]{"artist-image", "artist-name"},
                 mListener::onSharedElementTransitionEnqueued);
     }
 
@@ -135,18 +136,18 @@ public class ArtistsViewImpl extends BaseView implements ArtistsView {
                 return;
             }
 
-            final int spacing = DimensionUtils.getDp(16);
+            final int spacing = DimensionUtils.getDp(8);
 
             int left;
             if (pos % SPAN_COUNT != 1) {
-                left = spacing / 2;
+                left = 0;
             } else {
                 left = spacing;
             }
 
             int right;
             if (pos % SPAN_COUNT != 0) {
-                right = spacing / 2;
+                right = 0;
             } else {
                 right = spacing;
             }
